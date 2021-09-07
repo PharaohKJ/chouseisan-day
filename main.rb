@@ -22,7 +22,7 @@ days = (ARGV[1] || 7).to_i
 hours = (ARGV[2] || '19-22').to_s.split('-').map(&:to_i).sort
 holiday_hours = (ARGV[3] || ARGV[2] || '10-12-19-22').to_s.split('-').map(&:to_i).sort
 
-japanes_holidays = fetch_japanese_holiday
+japanese_holidays = fetch_japanese_holiday
 
 WEEK_NAME = %w[日 月 火 水 木 金 土].freeze
 
@@ -32,8 +32,9 @@ days.times do |count|
   d = time.day
   m = time.month
   target_hours = hours
-  target_hours = holiday_hours if [0, 6].include?(time.wday) || japanes_holidays[holiday_key]
+  is_jholiday = japanese_holidays[holiday_key]
+  target_hours = holiday_hours if [0, 6].include?(time.wday) || is_jholiday
   target_hours.each do |h|
-    puts "#{m}/#{d}(#{WEEK_NAME[time.wday]}) #{h}:00〜"
+    puts "#{m}/#{d}(#{WEEK_NAME[time.wday]}#{is_jholiday ? ':祝' : ''}) #{h}:00〜"
   end
 end
